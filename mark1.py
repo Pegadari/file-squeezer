@@ -4,15 +4,16 @@
     This algorithm uses tetration. For an explanation, see https://en.wikipedia.org/wiki/Tetration.
 """
 
-import logging
-import math
-from scipy.special import lambertw
-
 __author__ = "Darcy O'Brien (Pegadari)"
 __copyright__ = "Copyright 2022, File Squeezer"
 __license__ = "GPLv3.0"
 __version__ = "0.1.1"
 __status__ = "Complete"
+
+
+import logging
+import math
+from scipy.special import lambertw
 
 
 def main() -> None:
@@ -27,17 +28,16 @@ def squeeze(target: int) -> str:
     """ The compression algorithm. Find an equation equal to 'target'.
 
         Args:
-            target: the target (natural) number for the equation
+            target: the target number for the equation (>= 0)
 
         Returns:
             An equation equal to 'target'
 
         Raises:
-            ValueError: target < 0
+            AssertionError: violates context
     """
 
-    if target < 0:
-        raise ValueError("Cannot squeeze negative number: violates context.")
+    assert target >= 0, "Cannot squeeze negative numbers: violates context."
 
     equation = ""
     distance = target   # remaining distance to 'target'
@@ -48,7 +48,7 @@ def squeeze(target: int) -> str:
         tet2_base = math.floor(ssrt(distance))
         tet2_value = tet2(tet2_base)
 
-        # add term to the sum
+        # add term to the running sum
         equation += f"{tet2_base}**{tet2_base}+"
         distance -= tet2_value
 
@@ -69,11 +69,10 @@ def tet2(base: int) -> int:
 
 def ssrt(x: int) -> float:
     """ Return the super square-root of the argument (reverse of 2nd tetration).
-        The warning can be ignored. This function is safe.
         For an explanation, see https://en.wikipedia.org/wiki/Tetration#Square_super-root.
     """
 
-    return math.exp(lambertw(math.log(x)))
+    return math.exp(lambertw(math.log(x)).real)
 
 
 if __name__ == "__main__":
