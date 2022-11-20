@@ -4,36 +4,77 @@
     This algorithm uses tetration. For an explanation, see https://en.wikipedia.org/wiki/Tetration.
 """
 
+import logging
+import math
+from scipy.special import lambertw
+
 __author__ = "Darcy O'Brien (Pegadari)"
 __copyright__ = "Copyright 2022, File Squeezer"
 __license__ = "GPLv3.0"
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __status__ = "Complete"
 
-import logging
-logging.basicConfig(level=logging.INFO)     # comment this line to hide the INFO logging
 
-target = 4382028402103984520845380238045780234      # a random target number
-equation = ""                                       # an equation that can be used to output the target number
-distance = target                                   # the running target number ('target' - value of 'equation')
+def main() -> None:
+    """ Entry point. """
+    # logging.basicConfig(level=logging.INFO)     # comment this line to supress logging.info()
 
-# append terms to 'equation' until it equals 'target'
-while distance:
-    base = 1    # base of the tetration
-    tet2 = 1    # value for the 2nd tetration of 'base' ('base' ** 'base')
+    target = 4382028402103984520845380238045780234      # a random target number
+    print(squeeze(target))
 
-    # find the largest 2nd tetration that is less than the remaining distance
-    while (base+1) ** (base+1) < distance:
-        base += 1
-        tet2 = base ** base
 
-        logging.info(f"base, tet2: {base}, {tet2}")
+def squeeze(target: int) -> str:
+    """ The compression algorithm. Find an equation equal to 'target'.
 
-    # add 'tet2' to 'equation' and adjust 'distance' to reflect this
-    equation += f"{base}**{base}+"
-    distance -= tet2
+        Args:
+            target: the target (natural) number for the equation
 
-    logging.info(distance)
+        Returns:
+            An equation equal to 'target'
 
-equation = equation[:-1]    # remove the final '+'
-print(equation)
+        Raises:
+            ValueError: target < 0
+    """
+
+    if target < 0:
+        raise ValueError("Cannot squeeze negative number: violates context.")
+
+    equation = ""
+    distance = target   # remaining distance to 'target'
+    
+    # sum 2nd tetration terms until they equal 'target'
+    while distance:
+        # find next largest term
+        tet2_base = math.floor(ssrt(distance))
+        tet2_value = tet2(tet2_base)
+
+        # add term to the sum
+        equation += f"{tet2_base}**{tet2_base}+"
+        distance -= tet2_value
+
+        # logging
+        logging.info(distance)
+
+    equation = equation[:-1]    # remove the final "+"
+    return equation
+
+
+def tet2(base: int) -> int:
+    """ Return the 2nd tetration of the argument (base ** base).
+        For an explanation of tetration, see https://en.wikipedia.org/wiki/Tetration.
+    """
+
+    return base ** base
+
+
+def ssrt(x: int) -> float:
+    """ Return the super square-root of the argument (reverse of 2nd tetration).
+        The warning can be ignored. This function is safe.
+        For an explanation, see https://en.wikipedia.org/wiki/Tetration#Square_super-root.
+    """
+
+    return math.exp(lambertw(math.log(x)))
+
+
+if __name__ == "__main__":
+    main()
