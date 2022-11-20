@@ -7,7 +7,7 @@
 __author__ = "Darcy O'Brien (Pegadari)"
 __copyright__ = "Copyright 2022, File Squeezer"
 __license__ = "GPLv3.0"
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __status__ = "Complete"
 
 
