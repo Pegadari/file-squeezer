@@ -1,5 +1,12 @@
-""" A proof of concept to demonstrate that a number can be compressed into a mathematical equation.
-    While it is clear (from the output) that this implementation does not compress the number, it shows that this approach has merit.
+""" A proof of concept to demonstrate that a file can be compressed into a mathematical equation.
+
+    Using the unsigned integer representation of a file's binary, the file can be compressed by finding an equation with 
+    as few (2nd tetration) terms as possible. To uncompress the file, evaluate the equation and convert it back to binary.
+    Since this equation only features 2nd tetrations, the equation can be stored as a list of bases (similar to how you don't
+    store the '1.' in a floating point number).
+
+    While it is clear (from the output) that this implementation does not compress the number, it shows that this approach 
+    has merit.
 
     This algorithm uses tetration. For an explanation, see https://en.wikipedia.org/wiki/Tetration.
 """
@@ -7,7 +14,7 @@
 __author__ = "Darcy O'Brien (Pegadari)"
 __copyright__ = "Copyright 2022, File Squeezer"
 __license__ = "GPLv3.0"
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 __status__ = "Complete"
 
 
@@ -31,7 +38,7 @@ def squeeze(target: int) -> str:
             target: the target number for the equation (>= 0)
 
         Returns:
-            An equation equal to 'target'
+            An abbreviated equation equal to 'target'
 
         Raises:
             AssertionError: violates context
@@ -39,7 +46,8 @@ def squeeze(target: int) -> str:
 
     assert target >= 0, "Cannot squeeze negative numbers: violates context."
 
-    equation = ""
+    equation_abbr = []
+    equation_full = ""  # for logging
     distance = target   # remaining distance to 'target'
     
     # sum 2nd tetration terms until they equal 'target'
@@ -49,14 +57,18 @@ def squeeze(target: int) -> str:
         tet2_value = tet2(tet2_base)
 
         # add term to the running sum
-        equation += f"{tet2_base}**{tet2_base}+"
+        equation_abbr.append(tet2_base)
         distance -= tet2_value
 
         # logging
+        equation_full += f"{tet2_base}**{tet2_base}+"
         logging.info(distance)
 
-    equation = equation[:-1]    # remove the final "+"
-    return equation
+    # logging
+    equation_full = equation_full[:-1]    # remove the final "+"
+    logging.info(equation_full)
+
+    return equation_abbr
 
 
 def tet2(base: int) -> int:
