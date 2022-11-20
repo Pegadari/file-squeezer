@@ -4,9 +4,9 @@
     This algorithm uses tetration. For an explanation, see https://en.wikipedia.org/wiki/Tetration.
 """
 
-__author__ = "Darcy O'Brien"
+__author__ = "Darcy O'Brien (Pegadari)"
 __copyright__ = "Copyright 2022, File Squeezer"
-__license__ = "GNU General Public License v3.0"
+__license__ = "GPLv3.0"
 __version__ = "0.1.0"
 __status__ = "Complete"
 
