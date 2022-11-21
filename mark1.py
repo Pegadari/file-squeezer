@@ -9,6 +9,9 @@
     has merit.
 
     This algorithm uses tetration. For an explanation, see https://en.wikipedia.org/wiki/Tetration.
+
+    HOW THE ALGORITHM WORKS:
+        Lorum ipsum...
 """
 
 __author__ = "Darcy O'Brien (Pegadari)"
@@ -32,7 +35,7 @@ def main() -> None:
     print(squeeze(target))
 
 
-def squeeze(target: int) -> str:
+def squeeze(target: int) -> list:
     """ The compression algorithm. Find an equation equal to 'target'.
 
         Args:
@@ -43,6 +46,9 @@ def squeeze(target: int) -> str:
 
         Raises:
             AssertionError: violates context
+
+        >>> squeeze(35)
+        [3, 2, 2]
     """
 
     assert target >= 0, "Cannot squeeze negative numbers: violates context."
