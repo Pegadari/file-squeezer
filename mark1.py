@@ -25,9 +25,10 @@ from scipy.special import lambertw
 
 def main() -> None:
     """ Entry point. """
+
     # logging.basicConfig(level=logging.INFO)     # comment this line to supress logging.info()
 
-    target = 4382028402103984520845380238045780234      # a random target number
+    target = 4382028402103984520845380238045780234      # unsigned int of a file's binary (this file is 16 bytes)
     print(squeeze(target))
 
 
@@ -48,21 +49,21 @@ def squeeze(target: int) -> str:
 
     equation_abbr = []
     equation_full = ""  # for logging
-    distance = target   # remaining distance to 'target'
+    remaining_distance = target
     
     # sum 2nd tetration terms until they equal 'target'
-    while distance:
+    while remaining_distance:
         # find next largest term
-        tet2_base = math.floor(ssrt(distance))
+        tet2_base = math.floor(ssrt(remaining_distance))
         tet2_value = tet2(tet2_base)
 
         # add term to the running sum
         equation_abbr.append(tet2_base)
-        distance -= tet2_value
+        remaining_distance -= tet2_value
 
         # logging
         equation_full += f"{tet2_base}**{tet2_base}+"
-        logging.info(distance)
+        logging.info(remaining_distance)
 
     # logging
     equation_full = equation_full[:-1]    # remove the final "+"
@@ -73,18 +74,18 @@ def squeeze(target: int) -> str:
 
 def tet2(base: int) -> int:
     """ Return the 2nd tetration of the argument (base ** base).
-        For an explanation of tetration, see https://en.wikipedia.org/wiki/Tetration.
+        For an explanation, see https://en.wikipedia.org/wiki/Tetration.
     """
 
     return base ** base
 
 
-def ssrt(x: int) -> float:
+def ssrt(radicand: int) -> float:
     """ Return the super square-root of the argument (reverse of 2nd tetration).
         For an explanation, see https://en.wikipedia.org/wiki/Tetration#Square_super-root.
     """
 
-    return math.exp(lambertw(math.log(x)).real)
+    return math.exp(lambertw(math.log(radicand)).real)
 
 
 if __name__ == "__main__":
