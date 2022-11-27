@@ -1,56 +1,58 @@
+""" This module is used for compression. """
+
 import math
 from hyperoperation import second_tetration as tet2
 from hyperoperation import super_sqrt as ssrt
 
 
 def squeeze(target: int) -> list:
-        """"""
-        return frequency_vector(equation_vector(target))
+        """ Finds a (hopefully) smaller representation of the argument.
+
+            >>> squeeze(73)
+            [3, 4, 2]
+        """
+
+        return frequency_vector(frequency_map(target))
 
 
-def equation_vector(target: int) -> list:
-    """ The compression algorithm. Find an equation equal to 'target'.
+def frequency_map(target: int) -> dict:
+    """ Finds the frequency map (table) of the bases for the smallest sum of 2nd tetrations equal to the target.
 
-        Args:
-            target: the target number for the equation (>= 0)
-
-        Returns:
-            An abbreviated equation equal to 'target'
-
-        Raises:
-            AssertionError: violates context
-
-        >>> equation_vector(35)
-        [3, 2, 2]
-        # 3**3 + 2**2 + 2**2 = 35
+        >>> frequency_map(73)
+        {3: 2, 2: 4, 1: 3}
     """
 
     assert target >= 0, "Cannot squeeze negative numbers: violates context."
 
-    equation_abbr = []
-    # homogeneous sums equation
+    frequency_map = {}
     remaining_distance = target
     
-    # sum 2nd tetration terms until they equal 'target'
+    # sum 2nd tetration until they equal 'target'
     while remaining_distance:
-        # find next largest term
+        # find next largest 2nd tetration
         tet2_base = math.floor(ssrt(remaining_distance))
         tet2_value = tet2(tet2_base)
 
-        # add term to the running sum
-        equation_abbr.append(tet2_base)
-        remaining_distance -= tet2_value
+        # find how many times the largest 2nd tetration goes into 'remaining_distance'
+        frequency = math.floor(remaining_distance / tet2_value)
 
-    return equation_abbr
+        frequency_map[tet2_base] = frequency
+        remaining_distance -= tet2_value * frequency
+
+    return frequency_map
 
 
-def frequency_vector(equation: list) -> list:
-    """"""
-    largest_base = equation[0]                  # equation is already in decending order
+def frequency_vector(frequency_map: dict) -> list:
+    """ Converts the frequency map (table) to a vector, where the index of the value corresponds to its base.
+    
+        >>> frequency_vector({3: 2, 2: 4, 1: 3})
+        [3, 4, 2]
+    """
+
+    largest_base = max(frequency_map.keys())
     frequency_vector = [None] * largest_base
 
-    # 
-    for base in range(1, largest_base + 1):
-        frequency_vector[base - 1] = equation.count(base)
+    for base in range(1, largest_base + 1):   # bases index from 1, not 0
+        frequency_vector[base - 1] = frequency_map.get(base, 0)
 
     return frequency_vector

@@ -1,7 +1,5 @@
 .DS_Store
 */__pycache__
+
 ideas.txt
 mark2
-mark1/expander2.py
-mark1/squeezer2.py
-mark1/squeezer3.py

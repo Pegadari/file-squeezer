@@ -37,10 +37,12 @@
                = 73
 """
 
+
 __author__ = "Darcy O'Brien (Pegadari)"
 __copyright__ = "Copyright 2022, File Squeezer"
+__credits__ = ["Darcy O'Brien (Pegadari)", "Riley O'Brien (5igmatic)"]
 __license__ = "GPLv3.0"
-__version__ = "1.0"
+__version__ = "1.1"
 __status__ = "Complete"
 
 
@@ -60,22 +62,25 @@ def main() -> None:
 
     repetitions = 1
 
+
     # TARGET
-    target = TARGET_1KB     # unsigned int of a file's binary
+    target = TARGET_10KB    # unsigned int of a file's binary
     target_bytes = get_bytes(get_bits(target))
 
     print(f"""Target: {target_bytes} bytes""")
+
 
     # VECTOR
     vector = squeeze(target)
     squeeze_time = timeit.timeit(lambda: squeeze(target), number=repetitions) / repetitions
 
-    # 1 byte header for fixed number width, eg. [1, 3, 11] = 00000100 00010011 10110000 (3 bytes total)
-    #                                                        <header> <01><03> <11><**> (** = padding)
+    # 1 byte header for fixed number width.     eg. [1, 3, 11] = 00000100 00010011 10110000 (3 bytes total)
+    # This is one representation of 'vector'.                    <header> <01><03> <11><**> (** = padding)
     vector_bytes = 1 + get_bytes(len(vector) * get_bits(max(vector)))
     vector_bytes_min = get_bytes(sum(list(map(get_bits, vector))))
 
-    print(f"Vector: {vector_bytes} bytes (minimum possible: {vector_bytes_min} bytes)\n")
+    print(f"Vector: {vector_bytes} bytes (lower bound: {vector_bytes_min} bytes)\n")
+
 
     # STATISTICS
     constructor_result = expand(vector)     # should be the same as 'target'
@@ -96,7 +101,7 @@ def main() -> None:
     lossless:           {target == constructor_result}
     """)
 
-    assert target == constructor_result     # after statistics to show timings
+    assert target == constructor_result, "Algorithm is not lossless."   # after statistics to show timings
 
 
 if __name__ == "__main__":
