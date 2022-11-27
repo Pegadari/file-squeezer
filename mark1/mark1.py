@@ -17,13 +17,15 @@
 __author__ = "Darcy O'Brien (Pegadari)"
 __copyright__ = "Copyright 2022, File Squeezer"
 __license__ = "GPLv3.0"
-__version__ = "0.1.3"
+__version__ = "1.4"
 __status__ = "Complete"
 
 
 import logging
 import math
 from scipy.special import lambertw
+import scipy
+from multimethod import multimethod
 
 
 def main() -> None:
@@ -36,6 +38,11 @@ def main() -> None:
 
 
 def squeeze(target: int) -> list:
+    """"""
+    return frequency_vector(equation_vector(target))
+
+
+def equation_vector(target: int) -> list:
     """ The compression algorithm. Find an equation equal to 'target'.
 
         Args:
@@ -77,6 +84,29 @@ def squeeze(target: int) -> list:
 
     return equation_abbr
 
+
+def equation_vector_to_frequency_vector(equation: list) -> list:
+    """"""
+    largest_base = equation[0]                  # equation is already in decending order
+    frequency_vector = [None] * largest_base
+
+    # 
+    for base in range(largest_base, 0, -1):
+        print(base)
+        frequency_vector[base - 1] = equation.count(base)
+
+    return frequency_vector
+
+
+def expand(frequency_vector: list) -> int:
+    return evaluate(equation_vector(frequency_vector))
+
+
+def evaluate():
+    pass
+
+def frequency_vector_to_equation_vector():
+    pass
 
 def tet2(base: int) -> int:
     """ Return the 2nd tetration of the argument (base ** base).
