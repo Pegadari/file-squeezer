@@ -64,7 +64,7 @@ def main() -> None:
 
 
     # TARGET
-    target = TARGET_10KB    # unsigned int of a file's binary
+    target = TARGET_16B    # unsigned int of a file's binary
     target_bytes = get_bytes(get_bits(target))
 
     print(f"""Target: {target_bytes} bytes""")
@@ -80,7 +80,7 @@ def main() -> None:
     vector_bytes_min = get_bytes(sum(list(map(get_bits, vector))))
 
     print(f"Vector: {vector_bytes} bytes (lower bound: {vector_bytes_min} bytes)\n")
-
+    print(vector)
 
     # STATISTICS
     constructor_result = expand(vector)     # should be the same as 'target'
