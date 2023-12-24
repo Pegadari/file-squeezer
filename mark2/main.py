@@ -46,11 +46,15 @@ __version__ = "2.0"
 __status__ = "Incomplete"
 
 
+# disable limit for integer literals
+import sys
+sys.set_int_max_str_digits(0)
+
 import math
 import timeit
 from squeezer import squeeze
 from expander import expand
-from target import TARGET_CUSTOM, TARGET_1B, TARGET_16B, TARGET_500B, TARGET_1KB, TARGET_2KB, TARGET_10KB, TARGET_50KB, TARGET_100KB
+from targets import TARGET_CUSTOM, TARGET_1B, TARGET_16B, TARGET_500B, TARGET_1KB, TARGET_2KB, TARGET_10KB, TARGET_50KB, TARGET_100KB
 
 
 get_bits = lambda x: len(str(bin(x))) - 2   # -2 because formatted as "0b..."
